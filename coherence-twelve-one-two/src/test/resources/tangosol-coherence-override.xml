@@ -1,0 +1,13 @@
+<?xml version='1.0'?>
+<coherence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="http://xmlns.oracle.com/coherence/coherence-operational-config"
+           xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-operational-config coherence-operational-config.xsd">
+
+    <cluster-config>
+        <multicast-listener>
+            <time-to-live>0</time-to-live>
+            <join-timeout-milliseconds>1000</join-timeout-milliseconds>
+        </multicast-listener>
+    </cluster-config>
+
+</coherence>

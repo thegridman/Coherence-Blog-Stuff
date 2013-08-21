@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>coherence-stuff</artifactId>
+        <groupId>com.thegridman.coherence</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>coherence-three-seven</artifactId>
+
+    <name>Coherence 3.7.1 Stuff</name>
+
+    <properties>
+        <oracle.coherence.version>3.7.1.7</oracle.coherence.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.oracle.coherence</groupId>
+            <artifactId>coherence</artifactId>
+            <version>${oracle.coherence.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <!-- Test Dependencies -->
+        <dependency>
+            <groupId>com.oracle.tools</groupId>
+            <artifactId>oracle-tools-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.tools</groupId>
+            <artifactId>oracle-tools-runtime</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.tools</groupId>
+            <artifactId>oracle-tools-coherence</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.tools</groupId>
+            <artifactId>oracle-tools-testing-support</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+       		<groupId>junit</groupId>
+       		<artifactId>junit</artifactId>
+            <scope>test</scope>
+       	</dependency>
+
+       	<dependency>
+       		<groupId>org.mockito</groupId>
+       		<artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+       	</dependency>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+</project>

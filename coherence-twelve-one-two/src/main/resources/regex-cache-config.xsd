@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="class://com.thegridman.coherence.regex.RegExMappingNamespaceHandler"
+            xmlns="class://com.thegridman.coherence.regex.RegExMappingNamespaceHandler"
+            xmlns:coh="http://xmlns.oracle.com/coherence/coherence-cache-config"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            version="1.2">
+
+    <xsd:import namespace="http://xmlns.oracle.com/coherence/coherence-cache-config"
+                schemaLocation="http://xmlns.oracle.com/coherence/coherence-cache-config coherence-cache-config.xsd"/>
+
+
+    <xsd:element name="regex-cache-mapping" type="regex-cache-mapping-type"/>
+
+
+    <xsd:complexType name="regex-cache-mapping-type">
+        <xsd:sequence>
+            <xsd:element ref="cache-regex" />
+            <xsd:element ref="scheme-name" />
+            <xsd:element ref="coh:init-params" minOccurs="0" />
+            <xsd:element ref="coh:interceptors" minOccurs="0" />
+        </xsd:sequence>
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+
+    <xsd:element name="cache-regex" type="coh:coherence-string-type"/>
+
+    <xsd:element name="scheme-name" type="coh:coherence-string-type"/>
+
+</xsd:schema>

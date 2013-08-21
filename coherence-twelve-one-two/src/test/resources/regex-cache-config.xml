@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<cache-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://xmlns.oracle.com/coherence/coherence-cache-config"
+              xmlns:reg="class://com.thegridman.coherence.regex.RegExMappingNamespaceHandler"
+              xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-cache-config coherence-cache-config.xsd
+                                 class://com.thegridman.coherence.regex.RegExMappingNamespaceHandler regex-cache-config.xsd">
+
+    <defaults>
+        <serializer>pof</serializer>
+    </defaults>
+
+    <caching-scheme-mapping>
+
+        <cache-mapping>
+            <cache-name>dist-jk</cache-name>
+            <scheme-name>distributed-scheme</scheme-name>
+            <interceptors>
+                <interceptor>
+                    <instance>
+                        <class-name>com.thegridman.coherence.regex.MyInterceptor</class-name>
+                    </instance>
+                </interceptor>
+            </interceptors>
+        </cache-mapping>
+
+        <reg:regex-cache-mapping>
+            <reg:cache-regex>(.)*-test$</reg:cache-regex>
+            <reg:scheme-name>regex-one-scheme</reg:scheme-name>
+            <init-params>
+                <init-param>
+                    <param-name>expiry</param-name>
+                    <param-value>2s</param-value>
+                </init-param>
+            </init-params>
+        </reg:regex-cache-mapping>
+
+        <reg:regex-cache-mapping>
+            <reg:cache-regex>^test-(.)*</reg:cache-regex>
+            <reg:scheme-name>regex-two-scheme</reg:scheme-name>
+        </reg:regex-cache-mapping>
+
+        <reg:regex-cache-mapping>
+            <reg:cache-regex>(.)*-test-(.)*</reg:cache-regex>
+            <reg:scheme-name>regex-three-scheme</reg:scheme-name>
+            <init-params>
+                <init-param>
+                    <param-name>expiry</param-name>
+                    <param-value>2s</param-value>
+                </init-param>
+            </init-params>
+            <interceptors>
+                <interceptor>
+                    <name>test-interceptor-3</name>
+                    <order>HIGH</order>
+                    <instance>
+                        <class-name>com.thegridman.coherence.regex.MyInterceptor</class-name>
+                    </instance>
+                </interceptor>
+            </interceptors>
+        </reg:regex-cache-mapping>
+
+    </caching-scheme-mapping>
+
+    <caching-schemes>
+
+        <distributed-scheme>
+            <scheme-name>regex-one-scheme</scheme-name>
+            <service-name>RegExOneDistributedService</service-name>
+            <backing-map-scheme>
+                <local-scheme>
+                    <expiry-delay>{expiry 0}</expiry-delay>
+                </local-scheme>
+            </backing-map-scheme>
+            <autostart>true</autostart>
+        </distributed-scheme>
+
+        <distributed-scheme>
+            <scheme-name>regex-two-scheme</scheme-name>
+            <service-name>RegExTwoDistributedService</service-name>
+            <backing-map-scheme>
+                <local-scheme>
+                    <expiry-delay>{expiry 0}</expiry-delay>
+                </local-scheme>
+            </backing-map-scheme>
+            <autostart>true</autostart>
+        </distributed-scheme>
+
+        <distributed-scheme>
+            <scheme-name>regex-three-scheme</scheme-name>
+            <service-name>RegExThreeDistributedService</service-name>
+            <backing-map-scheme>
+                <local-scheme>
+                    <expiry-delay>{expiry 0}</expiry-delay>
+                </local-scheme>
+            </backing-map-scheme>
+            <autostart>true</autostart>
+        </distributed-scheme>
+
+        <distributed-scheme>
+            <scheme-name>distributed-scheme</scheme-name>
+            <service-name>DistributedService</service-name>
+            <backing-map-scheme>
+                <local-scheme/>
+            </backing-map-scheme>
+            <autostart>true</autostart>
+        </distributed-scheme>
+
+    </caching-schemes>
+
+</cache-config>
