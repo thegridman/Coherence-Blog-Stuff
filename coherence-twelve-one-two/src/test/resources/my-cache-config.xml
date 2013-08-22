@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<cache-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://xmlns.oracle.com/coherence/coherence-cache-config"
+              xmlns:kv="class://oracle.kv.coherence.NoSQLNamespaceHandler"
+              xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-cache-config coherence-cache-config.xsd
+                                  class://oracle.kv.coherence.NoSQLNamespaceHandler coherence-nosql-config.xsd">
+
+    <defaults>
+        <serializer>pof</serializer>
+    </defaults>
+
+    <caching-scheme-mapping>
+        <cache-mapping>
+            <cache-name>dist-*</cache-name>
+            <scheme-name>my-distributed-scheme</scheme-name>
+        </cache-mapping>
+
+        <cache-mapping>
+            <cache-name>nosql-*</cache-name>
+            <scheme-name>nosql-scheme</scheme-name>
+        </cache-mapping>
+
+        <cache-mapping>
+            <cache-name>nosql-person</cache-name>
+            <scheme-name>nosql-avro-scheme</scheme-name>
+        </cache-mapping>
+
+    </caching-scheme-mapping>
+
+    <caching-schemes>
+
+        <distributed-scheme>
+            <scheme-name>my-distributed-scheme</scheme-name>
+            <service-name>DistributedCache</service-name>
+            <backing-map-scheme>
+                <local-scheme/>
+            </backing-map-scheme>
+            <autostart>true</autostart>
+        </distributed-scheme>
+
+        <distributed-scheme>
+            <scheme-name>nosql-scheme</scheme-name>
+            <service-name>NoSQLService</service-name>
+            <backing-map-scheme>
+                <read-write-backing-map-scheme>
+                    <internal-cache-scheme>
+                        <local-scheme/>
+                    </internal-cache-scheme>
+                    <cachestore-scheme>
+                        <kv:binary-cache-store>
+                            <kv:store-name system-property="oracle.kv.storename"/>
+                            <kv:helper-hosts system-property="oracle.kv.helperhosts"/>
+                            <kv:key-prefix>/{cache-name}</kv:key-prefix>
+                        </kv:binary-cache-store>
+                    </cachestore-scheme>
+                </read-write-backing-map-scheme>
+            </backing-map-scheme>
+            <autostart>true</autostart>
+        </distributed-scheme>
+
+        <distributed-scheme>
+            <scheme-name>nosql-avro-scheme</scheme-name>
+            <service-name>NoSQLService</service-name>
+            <backing-map-scheme>
+                <read-write-backing-map-scheme>
+                    <internal-cache-scheme>
+                        <local-scheme/>
+                    </internal-cache-scheme>
+                    <cachestore-scheme>
+                        <kv:avro-cache-store>
+                            <kv:store-name system-property="oracle.kv.storename"/>
+                            <kv:helper-hosts system-property="oracle.kv.helperhosts"/>
+                            <kv:key-mapper>
+                                <instance>
+                                    <class-name>oracle.kv.coherence.NoSQLKeyCacheKeyMapper</class-name>
+                                </instance>
+                            </kv:key-mapper>
+                        </kv:avro-cache-store>
+                    </cachestore-scheme>
+                </read-write-backing-map-scheme>
+            </backing-map-scheme>
+            <autostart>true</autostart>
+        </distributed-scheme>
+
+        <proxy-scheme>
+            <scheme-name>my-proxy</scheme-name>
+            <service-name>TcpProxyService</service-name>
+            <acceptor-config>
+                <tcp-acceptor>
+                    <local-address>
+                        <address system-property="tangosol.coherence.extend.address">localhost</address>
+                        <port system-property="tangosol.coherence.extend.port"/>
+                    </local-address>
+                </tcp-acceptor>
+            </acceptor-config>
+            <autostart system-property="tangosol.coherence.extend.enabled">false</autostart>
+        </proxy-scheme>
+
+    </caching-schemes>
+
+</cache-config>

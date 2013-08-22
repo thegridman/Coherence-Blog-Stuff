@@ -25,6 +25,24 @@
             <version>${oracle.coherence.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.oracle.kv</groupId>
+            <artifactId>kv-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.kv</groupId>
+            <artifactId>kv-coherence</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.kv</groupId>
+            <artifactId>kv-store</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+        </dependency>
 
         <!-- Test Dependencies -->
         <dependency>
