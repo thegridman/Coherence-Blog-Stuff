@@ -15,6 +15,10 @@ public class MyInterceptor implements EventInterceptor<EntryEvent>
 {
     private String name;
 
+    public MyInterceptor()
+    {
+    }
+
     public MyInterceptor(String name)
     {
         this.name = name;

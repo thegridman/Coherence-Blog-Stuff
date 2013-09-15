@@ -39,11 +39,18 @@ public class KVLiteLauncher
     public static final String PROP_KV_PORT = "oracle.kv.port";
 
     private final String kvRoot;
+    private final boolean cleanupRoot;
     private JavaApplication kvLite;
 
     public KVLiteLauncher(String kvRoot)
     {
+        this(kvRoot, true);
+    }
+
+    public KVLiteLauncher(String kvRoot, boolean cleanupRoot)
+    {
         this.kvRoot = kvRoot;
+        this.cleanupRoot = cleanupRoot;
     }
 
     public void startKVLite(JavaApplicationBuilder builder, Iterable<Integer> ports) throws Exception
@@ -121,10 +128,11 @@ public class KVLiteLauncher
         int adminPort = it.next();
 
         File kvRootFile = new File(kvRoot);
-        if (kvRootFile.exists())
+        if (kvRootFile.exists() && cleanupRoot)
         {
             deleteRecursive(kvRootFile);
         }
+
         if (!kvRootFile.exists())
         {
             kvRootFile.mkdirs();
@@ -173,8 +181,15 @@ public class KVLiteLauncher
         {
             throw new IllegalArgumentException("Missing kvRoot parameter");
         }
+
+        boolean cleanup = true;
+        if (args.length > 1)
+        {
+            cleanup = Boolean.parseBoolean(args[1]);
+        }
+
         Container.start();
-        KVLiteLauncher launcher = new KVLiteLauncher(args[0]);
+        KVLiteLauncher launcher = new KVLiteLauncher(args[0], cleanup);
         List<Integer> kvPorts = Arrays.asList(50000, 50001);
         launcher.startKVLite(new ContainerBasedJavaApplicationBuilder(), kvPorts);
         final Object waiter = new Object();

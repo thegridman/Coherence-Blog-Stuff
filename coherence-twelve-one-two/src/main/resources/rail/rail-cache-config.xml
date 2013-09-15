@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<cache-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://xmlns.oracle.com/coherence/coherence-cache-config"
+              xmlns:kv="class://oracle.kv.coherence.NoSQLNamespaceHandler"
+              xmlns:ex="class://com.thegridman.coherence.config.ExtensionsNamespaceHandler"
+              xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-cache-config coherence-cache-config.xsd
+                                  class://com.thegridman.coherence.config.ExtensionsNamespaceHandler coherence-extended-config.xsd
+                                  class://oracle.kv.coherence.NoSQLNamespaceHandler coherence-nosql-config.xsd">
+
+    <defaults>
+        <serializer>pof</serializer>
+    </defaults>
+
+    <caching-scheme-mapping>
+
+        <cache-mapping>
+            <cache-name>rail-*</cache-name>
+            <scheme-name>rail-distributed-scheme</scheme-name>
+        </cache-mapping>
+
+        <cache-mapping>
+            <cache-name>rail-tiploc</cache-name>
+            <scheme-name>rail-replicated-scheme</scheme-name>
+        </cache-mapping>
+
+        <cache-mapping>
+            <cache-name>rail-movements</cache-name>
+            <scheme-name>rail-distributed-scheme</scheme-name>
+            <interceptors>
+                <interceptor>
+                    <instance>
+                        <class-name>com.thegridman.rail.movements.TrainStatusUpdateInterceptor</class-name>
+                    </instance>
+                </interceptor>
+            </interceptors>
+        </cache-mapping>
+
+        <cache-mapping>
+            <cache-name>rail-schedules</cache-name>
+            <scheme-name>rail-nosql-scheme</scheme-name>
+            <init-params>
+                <init-param>
+                    <param-name>key-mapper</param-name>
+                    <param-value>com.thegridman.rail.kv.ScheduleBinaryEntryKeyMapper</param-value>
+                </init-param>
+            </init-params>
+        </cache-mapping>
+
+        <cache-mapping>
+            <cache-name>replicated-*</cache-name>
+            <scheme-name>cqc-scheme</scheme-name>
+            <init-params>
+                <init-param>
+                    <param-name>underlying-cache</param-name>
+                    <param-value>*</param-value>
+                </init-param>
+            </init-params>
+        </cache-mapping>
+
+    </caching-scheme-mapping>
+
+    <caching-schemes>
+
+        <distributed-scheme>
+            <scheme-name>rail-nosql-scheme</scheme-name>
+            <scheme-ref>rail-distributed-scheme</scheme-ref>
+            <backing-map-scheme>
+              <read-write-backing-map-scheme>
+                <internal-cache-scheme>
+                  <local-scheme/>
+                </internal-cache-scheme>
+                  <cachestore-scheme>
+                      <kv:binary-cache-store>
+                          <kv:store-name system-property="oracle.kv.storename">kvstore</kv:store-name>
+                          <kv:helper-hosts system-property="oracle.kv.helperhosts">50000</kv:helper-hosts>
+                          <kv:key-mapper>
+                              <instance>
+                                  <class-name>{key-mapper}</class-name>
+                              </instance>
+                          </kv:key-mapper>
+                      </kv:binary-cache-store>
+                  </cachestore-scheme>
+              </read-write-backing-map-scheme>
+            </backing-map-scheme>
+        </distributed-scheme>
+
+        <distributed-scheme>
+            <scheme-name>rail-distributed-scheme</scheme-name>
+            <service-name>RailCacheService</service-name>
+            <backing-map-scheme>
+                <local-scheme/>
+            </backing-map-scheme>
+            <autostart>true</autostart>
+            <ex:user-context-resources>
+                <ex:user-context-resource>
+                    <ex:resource-name>rail-tiploc</ex:resource-name>
+                    <ex:resource-type>com.tangosol.net.NamedCache</ex:resource-type>
+                    <init-param>
+                        <param-type>{cache-ref}</param-type>
+                        <param-value>rail-tiploc</param-value>
+                    </init-param>
+                </ex:user-context-resource>
+            </ex:user-context-resources>
+        </distributed-scheme>
+
+        <replicated-scheme>
+            <scheme-name>rail-replicated-scheme</scheme-name>
+            <service-name>RailReplicatedService</service-name>
+            <backing-map-scheme>
+                <local-scheme/>
+            </backing-map-scheme>
+            <autostart>true</autostart>
+        </replicated-scheme>
+
+        <class-scheme>
+            <scheme-name>cqc-scheme</scheme-name>
+            <class-name>com.thegridman.coherence.cqc.CQCWrapper</class-name>
+            <init-params>
+                <init-param>
+                    <param-type>{cache-ref}</param-type>
+                    <param-value>{underlying-cache}</param-value>
+                </init-param>
+                <init-param>
+                    <param-type>java.lang.String</param-type>
+                    <param-value>{cache-name}</param-value>
+                </init-param>
+                <init-param>
+                    <param-name>java.lang.String</param-name>
+                    <param-value>{filter-string}</param-value>
+                </init-param>
+            </init-params>
+        </class-scheme>
+
+        <proxy-scheme>
+          <scheme-name>proxy-scheme</scheme-name>
+          <service-name>TcpProxyService</service-name>
+          <acceptor-config>
+            <tcp-acceptor>
+              <local-address>
+                <address system-property="tangosol.coherence.extend.address">localhost</address>
+                <port system-property="tangosol.coherence.extend.port">9099</port>
+              </local-address>
+            </tcp-acceptor>
+          </acceptor-config>
+          <autostart system-property="tangosol.coherence.extend.enabled">false</autostart>
+        </proxy-scheme>
+
+    </caching-schemes>
+
+</cache-config>

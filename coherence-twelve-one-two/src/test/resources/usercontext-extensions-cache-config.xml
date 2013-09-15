@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<cache-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://xmlns.oracle.com/coherence/coherence-cache-config"
+              xmlns:ex="class://com.thegridman.coherence.config.ExtensionsNamespaceHandler"
+              xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-cache-config coherence-cache-config.xsd
+                                  class://com.thegridman.coherence.config.ExtensionsNamespaceHandler coherence-extended-config.xsd">
+
+    <defaults>
+        <serializer>pof</serializer>
+    </defaults>
+
+    <caching-scheme-mapping>
+        <cache-mapping>
+            <cache-name>dist-*</cache-name>
+            <scheme-name>my-distributed-scheme</scheme-name>
+        </cache-mapping>
+
+        <cache-mapping>
+            <cache-name>replicated-*</cache-name>
+            <scheme-name>my-replicated-scheme</scheme-name>
+        </cache-mapping>
+    </caching-scheme-mapping>
+
+    <caching-schemes>
+
+        <distributed-scheme>
+            <scheme-name>my-distributed-scheme</scheme-name>
+            <service-name>DistributedCache</service-name>
+            <thread-count>5</thread-count>
+            <backing-map-scheme>
+                <local-scheme/>
+            </backing-map-scheme>
+            <autostart>true</autostart>
+            <ex:user-context-resources>
+                <ex:user-context-resource>
+                    <ex:resource-name>test-resource</ex:resource-name>
+                    <ex:resource-type>com.thegridman.coherence.config.MyTestResource</ex:resource-type>
+                    <instance>
+                        <class-name>com.thegridman.coherence.config.MyTestResource</class-name>
+                        <init-params>
+                            <init-param>
+                                <param-type>String</param-type>
+                                <param-value>from instance element</param-value>
+                            </init-param>
+                        </init-params>
+                    </instance>
+                </ex:user-context-resource>
+                <ex:user-context-resource>
+                    <ex:resource-name>replicated-test-cache</ex:resource-name>
+                    <ex:resource-type>com.tangosol.net.NamedCache</ex:resource-type>
+                    <init-param>
+                        <param-type>{cache-ref}</param-type>
+                        <param-value>replicated-test</param-value>
+                    </init-param>
+                </ex:user-context-resource>
+                <ex:user-context-resource>
+                    <ex:resource-name>another-test</ex:resource-name>
+                    <ex:resource-type>com.thegridman.coherence.config.MyTestResource</ex:resource-type>
+                    <init-param>
+                        <param-type>{scheme-ref}</param-type>
+                        <param-value>test-scheme</param-value>
+                    </init-param>
+                </ex:user-context-resource>
+                <ex:user-context-resource>
+                    <ex:resource-name>invocation</ex:resource-name>
+                    <ex:resource-type>com.tangosol.net.InvocationService</ex:resource-type>
+                    <init-param>
+                        <param-type>{scheme-ref}</param-type>
+                        <param-value>my-invocation-scheme</param-value>
+                    </init-param>
+                </ex:user-context-resource>
+            </ex:user-context-resources>
+        </distributed-scheme>
+
+        <class-scheme>
+            <scheme-name>test-scheme</scheme-name>
+            <class-name>com.thegridman.coherence.config.MyTestResource</class-name>
+            <init-params>
+                <init-param>
+                    <param-type>String</param-type>
+                    <param-value>from class scheme</param-value>
+                </init-param>
+            </init-params>
+        </class-scheme>
+
+        <replicated-scheme>
+            <scheme-name>my-replicated-scheme</scheme-name>
+            <service-name>ReplicatedService</service-name>
+            <backing-map-scheme>
+                <local-scheme/>
+            </backing-map-scheme>
+        </replicated-scheme>
+
+        <invocation-scheme>
+            <scheme-name>my-invocation-scheme</scheme-name>
+            <service-name>MyInvocationService</service-name>
+            <thread-count>5</thread-count>
+            <autostart>true</autostart>
+        </invocation-scheme
+                >
+    </caching-schemes>
+
+</cache-config>

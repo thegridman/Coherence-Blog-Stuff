@@ -10,7 +10,7 @@
                 <init-params>
                     <init-param>
                         <param-type>java.lang.String</param-type>
-                        <param-value>my-pof-config.xml</param-value>
+                        <param-value system-property="tangosol.pof.config">my-pof-config.xml</param-value>
                     </init-param>
                 </init-params>
             </instance>
@@ -38,6 +38,7 @@
                     </remote-addresses>
                 </tcp-initiator>
             </initiator-config>
+            <defer-key-association-check>true</defer-key-association-check>
         </remote-cache-scheme>
 
         <remote-invocation-scheme>
