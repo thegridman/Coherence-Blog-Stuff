@@ -31,26 +31,41 @@
     </xsd:complexType>
 
     <xsd:element name="instance">
-        <xsd:annotation>
-            <xsd:documentation>
-                The instance element defines the selection of an implementation class
-                or class-factory name and init-params.
-            </xsd:documentation>
-        </xsd:annotation>
         <xsd:complexType>
             <xsd:group ref="coh:instance"/>
             <xsd:anyAttribute namespace="##other" processContents="lax"/>
         </xsd:complexType>
     </xsd:element>
 
-    <xsd:group name="user-context-resource">
+    <xsd:element name="user-context-resources" type="user-context-resources-type"/>
+
+    <xsd:complexType name="user-context-resources-type">
+        <xsd:sequence>
+            <xsd:element ref="user-context-resource" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="user-context-resource" type="user-context-resource-type"/>
+
+    <xsd:complexType name="user-context-resource-type">
         <xsd:sequence>
             <xsd:element ref="resource-name"/>
             <xsd:element ref="resource-type"/>
-            <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+            <xsd:choice>
+                <xsd:element ref="service-reference"/>
+                <xsd:any namespace="##other" processContents="lax"/>
+            </xsd:choice>
         </xsd:sequence>
-    </xsd:group>
+    </xsd:complexType>
 
     <xsd:element name="resource-name" type="coh:coherence-string-type"/>
     <xsd:element name="resource-type" type="coh:coherence-string-type"/>
+
+    <xsd:element name="service-reference" type="service-reference-type" />
+
+    <xsd:complexType name="service-reference-type" mixed="true">
+        <xsd:attribute name="system-property" type="xsd:normalizedString" use="optional" />
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+
 </xsd:schema>

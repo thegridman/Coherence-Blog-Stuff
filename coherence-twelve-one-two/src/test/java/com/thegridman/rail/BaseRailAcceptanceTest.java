@@ -62,16 +62,18 @@ public abstract class BaseRailAcceptanceTest extends AbstractTest
         Container.start();
         pofContext = new ConfigurablePofContext(TEST_POF_CONFIG);
 
+        String hostName =  Inet4Address.getLocalHost().getHostName();
+
         AvailablePortIterator kvPorts = new AvailablePortIterator(50000);
         AvailablePortIterator coherencePorts = new AvailablePortIterator(40000);
 
         ContainerBasedJavaApplicationBuilder builder = new ContainerBasedJavaApplicationBuilder();
 
         kvLite = new KVLiteLauncher("./target/kvroot");
-        kvLite.startKVLite(builder, kvPorts);
+        kvLite.startKVLite(builder, hostName, kvPorts);
 
-        ClusterMemberSchema storage = createStorageNodeSchema(coherencePorts, kvLite.getSystemProperties());
-        ClusterMemberSchema extend = createExtendProxySchema(coherencePorts, kvLite.getSystemProperties());
+        ClusterMemberSchema storage = createStorageNodeSchema(hostName, coherencePorts, kvLite.getSystemProperties());
+        ClusterMemberSchema extend = createExtendProxySchema(hostName, coherencePorts, kvLite.getSystemProperties());
 
         ClusterBuilder clusterBuilder = new ClusterBuilder();
         clusterBuilder.addBuilder(builder, storage, "Data", 2);
@@ -169,26 +171,24 @@ public abstract class BaseRailAcceptanceTest extends AbstractTest
         });
     }
 
-    public static ClusterMemberSchema createStorageNodeSchema(AvailablePortIterator ports, Properties properties) throws Exception
+    public static ClusterMemberSchema createStorageNodeSchema(String hostName, AvailablePortIterator ports, Properties properties) throws Exception
     {
-        return createCommonSchema(ports, properties)
+        return createCommonSchema(hostName, ports, properties)
                 .setStorageEnabled(true);
     }
 
-    public static ClusterMemberSchema createExtendProxySchema(AvailablePortIterator ports, Properties properties) throws Exception
+    public static ClusterMemberSchema createExtendProxySchema(String hostName, AvailablePortIterator ports, Properties properties) throws Exception
     {
-        return createCommonSchema(ports, properties)
+        return createCommonSchema(hostName, ports, properties)
                 .setStorageEnabled(false)
                 .setSystemProperty("tangosol.coherence.extend.enabled", true)
                 .setSystemProperty("tangosol.coherence.extend.port", ports);
     }
 
-    public static ClusterMemberSchema createCommonSchema(AvailablePortIterator ports, Properties properties) throws Exception
+    public static ClusterMemberSchema createCommonSchema(String hostName, AvailablePortIterator ports, Properties properties) throws Exception
     {
         String storeName = properties.getProperty(KVLiteLauncher.PROP_KV_STORENAME);
         String kvHostName = properties.getProperty(KVLiteLauncher.PROP_KV_HELPERHOSTS);
-
-        String localHostName = Inet4Address.getLocalHost().getHostName();
 
         return new ClusterMemberSchema()
                 .setSystemProperty(KVLiteLauncher.PROP_KV_STORENAME, storeName)
@@ -199,7 +199,7 @@ public abstract class BaseRailAcceptanceTest extends AbstractTest
                 .setClusterPort(12345)
                 .setJMXManagementMode(ClusterMemberSchema.JMXManagementMode.LOCAL_ONLY)
                 .setJMXPort(ports)
-                .setRMIServerHostName(localHostName)
+                .setRMIServerHostName(hostName)
                 .setRemoteJMXManagement(true)
                 .setSingleServerMode()
                 .setPreferIPv4(true);

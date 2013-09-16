@@ -53,9 +53,9 @@ public class KVLiteLauncher
         this.cleanupRoot = cleanupRoot;
     }
 
-    public void startKVLite(JavaApplicationBuilder builder, Iterable<Integer> ports) throws Exception
+    public void startKVLite(JavaApplicationBuilder builder, String hostName, Iterable<Integer> ports) throws Exception
     {
-        JavaApplicationSchema kvLiteSchema = createKvLiteScheme(ports);
+        JavaApplicationSchema kvLiteSchema = createKvLiteScheme(hostName, ports);
         kvLite = (JavaApplication) builder.realize(kvLiteSchema, "KVLite", new SystemApplicationConsole());
     }
 
@@ -107,7 +107,7 @@ public class KVLiteLauncher
         return kvLite.getSystemProperties();
     }
 
-    private JavaApplicationSchema<SimpleJavaApplication, SimpleJavaApplicationSchema> createKvLiteScheme(Iterable<Integer> ports) throws Exception
+    private JavaApplicationSchema<SimpleJavaApplication, SimpleJavaApplicationSchema> createKvLiteScheme(String hostName, Iterable<Integer> ports) throws Exception
     {
         File kvHome = new File("/var/kv/kv-2.1.8");
         File libDir = new File(kvHome, "lib");
@@ -122,7 +122,6 @@ public class KVLiteLauncher
         }
 
         String storeName = "kvstore";
-        String hostName = InetAddressHelper.getLocalHost().getHostName();
         Iterator<Integer> it = ports.iterator();
         int port = it.next();
         int adminPort = it.next();
@@ -191,7 +190,8 @@ public class KVLiteLauncher
         Container.start();
         KVLiteLauncher launcher = new KVLiteLauncher(args[0], cleanup);
         List<Integer> kvPorts = Arrays.asList(50000, 50001);
-        launcher.startKVLite(new ContainerBasedJavaApplicationBuilder(), kvPorts);
+        String hostName = InetAddressHelper.getLocalHost().getHostName();
+        launcher.startKVLite(new ContainerBasedJavaApplicationBuilder(), hostName, kvPorts);
         final Object waiter = new Object();
         synchronized (waiter)
         {

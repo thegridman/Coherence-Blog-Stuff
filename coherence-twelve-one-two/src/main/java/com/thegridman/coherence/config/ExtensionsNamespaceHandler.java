@@ -19,6 +19,7 @@ public class ExtensionsNamespaceHandler extends AbstractNamespaceHandler
         registerProcessor("service-listeners", new ListOfInstancesProcessor<>(ServiceListenersScheme.class, ServiceListenerBuilder.class));
         registerProcessor("user-context-resource", new NamedResourceProcessor());
         registerProcessor("user-context-resources", new ListOfInstancesProcessor<>(NamedResourcesScheme.class, NamedResourceBuilder.class));
+        registerProcessor(ServiceReferenceProcessor.class);
     }
 
     @SuppressWarnings("unchecked")

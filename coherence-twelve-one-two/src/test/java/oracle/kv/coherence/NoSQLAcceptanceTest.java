@@ -35,6 +35,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.management.ObjectName;
+import java.net.Inet4Address;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -64,13 +65,15 @@ public class NoSQLAcceptanceTest extends AbstractTest
         Container.start();
         pofContext = new ConfigurablePofContext("my-pof-config.xml");
 
+        String hostName = Inet4Address.getLocalHost().getHostName();
+
         AvailablePortIterator kvPorts = new AvailablePortIterator(50000);
         AvailablePortIterator coherencePorts = new AvailablePortIterator(40000);
 
         ContainerBasedJavaApplicationBuilder builder = new ContainerBasedJavaApplicationBuilder();
 
         kvLite = new KVLiteLauncher("./target/kvroot");
-        kvLite.startKVLite(builder, kvPorts);
+        kvLite.startKVLite(builder, hostName, kvPorts);
 
         ClusterMemberSchema storage = createStorageNodeSchema(coherencePorts, kvLite.getSystemProperties());
         ClusterMemberSchema extend = createExtendProxySchema(coherencePorts, kvLite.getSystemProperties());

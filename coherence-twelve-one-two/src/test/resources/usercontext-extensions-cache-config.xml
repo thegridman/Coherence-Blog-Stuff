@@ -69,6 +69,11 @@
                         <param-value>my-invocation-scheme</param-value>
                     </init-param>
                 </ex:user-context-resource>
+                <ex:user-context-resource>
+                    <ex:resource-name>replicated-service</ex:resource-name>
+                    <ex:resource-type>com.tangosol.net.CacheService</ex:resource-type>
+                    <ex:service-reference>ReplicatedService</ex:service-reference>
+                </ex:user-context-resource>
             </ex:user-context-resources>
         </distributed-scheme>
 

@@ -2,6 +2,7 @@ package com.thegridman.coherence.config;
 
 import com.oracle.tools.junit.AbstractTest;
 import com.tangosol.net.CacheFactory;
+import com.tangosol.net.CacheService;
 import com.tangosol.net.ConfigurableCacheFactory;
 import com.tangosol.net.InvocationService;
 import com.tangosol.net.NamedCache;
@@ -24,7 +25,6 @@ public class UserContextServiceExtensionsAcceptanceTest extends AbstractTest
     @BeforeClass
     public static void createCacheFactory()
     {
-        System.setProperty("tangosol.coherence.localhost", "Jonathans-MacBook-Pro.local");
         System.setProperty("tangosol.coherence.cacheconfig", "usercontext-extensions-cache-config.xml");
 
         cacheFactory = CacheFactory.getCacheFactoryBuilder().getConfigurableCacheFactory(null);
@@ -74,4 +74,14 @@ public class UserContextServiceExtensionsAcceptanceTest extends AbstractTest
         assertThat(invocationService.getInfo().getServiceName(), is("MyInvocationService"));
     }
 
+    @Test
+    public void shouldContainServiceReference() throws Exception
+    {
+        Service service = cacheFactory.ensureService("DistributedCache");
+        ResourceRegistry registry = (ResourceRegistry) service.getUserContext();
+
+        CacheService cacheService = registry.getResource(CacheService.class, "replicated-service");
+        assertThat(cacheService, is(notNullValue()));
+        assertThat(cacheService.getInfo().getServiceName(), is("ReplicatedService"));
+    }
 }

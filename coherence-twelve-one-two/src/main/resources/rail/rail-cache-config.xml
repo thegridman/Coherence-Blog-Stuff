@@ -84,6 +84,15 @@
             </backing-map-scheme>
         </distributed-scheme>
 
+        <replicated-scheme>
+            <scheme-name>rail-replicated-scheme</scheme-name>
+            <service-name>RailReplicatedService</service-name>
+            <backing-map-scheme>
+                <local-scheme/>
+            </backing-map-scheme>
+            <autostart>true</autostart>
+        </replicated-scheme>
+
         <distributed-scheme>
             <scheme-name>rail-distributed-scheme</scheme-name>
             <service-name>RailCacheService</service-name>
@@ -93,24 +102,12 @@
             <autostart>true</autostart>
             <ex:user-context-resources>
                 <ex:user-context-resource>
-                    <ex:resource-name>rail-tiploc</ex:resource-name>
+                    <ex:resource-name>RailReplicatedService</ex:resource-name>
                     <ex:resource-type>com.tangosol.net.NamedCache</ex:resource-type>
-                    <init-param>
-                        <param-type>{cache-ref}</param-type>
-                        <param-value>rail-tiploc</param-value>
-                    </init-param>
+                    <ex:service-reference>RailReplicatedService</ex:service-reference>
                 </ex:user-context-resource>
             </ex:user-context-resources>
         </distributed-scheme>
-
-        <replicated-scheme>
-            <scheme-name>rail-replicated-scheme</scheme-name>
-            <service-name>RailReplicatedService</service-name>
-            <backing-map-scheme>
-                <local-scheme/>
-            </backing-map-scheme>
-            <autostart>true</autostart>
-        </replicated-scheme>
 
         <class-scheme>
             <scheme-name>cqc-scheme</scheme-name>
