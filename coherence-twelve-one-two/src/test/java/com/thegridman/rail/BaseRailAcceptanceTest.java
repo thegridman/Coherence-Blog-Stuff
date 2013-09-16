@@ -14,6 +14,7 @@ import com.tangosol.io.pof.ConfigurablePofContext;
 import com.tangosol.net.CacheFactory;
 import com.tangosol.net.CacheFactoryBuilder;
 import com.tangosol.net.ConfigurableCacheFactory;
+import com.tangosol.net.InetAddressHelper;
 import com.tangosol.net.NamedCache;
 import com.tangosol.run.xml.XmlDocument;
 import com.tangosol.run.xml.XmlElement;
@@ -32,7 +33,6 @@ import org.junit.BeforeClass;
 
 import javax.management.ObjectName;
 import java.io.IOException;
-import java.net.Inet4Address;
 import java.util.List;
 import java.util.Properties;
 
@@ -62,7 +62,7 @@ public abstract class BaseRailAcceptanceTest extends AbstractTest
         Container.start();
         pofContext = new ConfigurablePofContext(TEST_POF_CONFIG);
 
-        String hostName =  Inet4Address.getLocalHost().getHostName();
+        String hostName = InetAddressHelper.getLocalHost().getHostName();
 
         AvailablePortIterator kvPorts = new AvailablePortIterator(50000);
         AvailablePortIterator coherencePorts = new AvailablePortIterator(40000);

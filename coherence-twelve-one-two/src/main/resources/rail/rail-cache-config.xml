@@ -103,7 +103,7 @@
             <ex:user-context-resources>
                 <ex:user-context-resource>
                     <ex:resource-name>RailReplicatedService</ex:resource-name>
-                    <ex:resource-type>com.tangosol.net.NamedCache</ex:resource-type>
+                    <ex:resource-type>com.tangosol.net.CacheService</ex:resource-type>
                     <ex:service-reference>RailReplicatedService</ex:service-reference>
                 </ex:user-context-resource>
             </ex:user-context-resources>

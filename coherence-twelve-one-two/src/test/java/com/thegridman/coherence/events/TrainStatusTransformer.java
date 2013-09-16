@@ -2,15 +2,12 @@ package com.thegridman.coherence.events;
 
 import com.tangosol.io.pof.annotation.Portable;
 import com.tangosol.net.BackingMapContext;
-import com.tangosol.net.BackingMapManager;
 import com.tangosol.net.BackingMapManagerContext;
-import com.tangosol.net.CacheService;
 import com.tangosol.util.Binary;
 import com.tangosol.util.BinaryEntry;
 import com.tangosol.util.MapEvent;
 import com.tangosol.util.MapEventTransformer;
 import com.tangosol.util.ObservableMap;
-import com.tangosol.util.ResourceRegistry;
 import com.thegridman.rail.RailConstants;
 import com.thegridman.rail.movements.TrainMovementMessage;
 import com.thegridman.rail.movements.TrainMovementMessageId;
@@ -52,11 +49,11 @@ public class TrainStatusTransformer implements MapEventTransformer
 
         TrainMovementMovementMessage movementMessage = (TrainMovementMovementMessage) message;
 
-        ResourceRegistry registry = (ResourceRegistry) context.getCacheService().getUserContext();
-        CacheService railReplicatedService = registry.getResource(CacheService.class, "RailReplicatedService");
-        BackingMapManager backingMapManager = railReplicatedService.getBackingMapManager();
-        BackingMapContext tiplocBackingMapContext = backingMapManager.getContext().getBackingMapContext("rail-tiploc");
-        ObservableMap tiplocBackingMap = tiplocBackingMapContext.getBackingMap();
+//        ResourceRegistry registry = (ResourceRegistry) context.getCacheService().getUserContext();
+//        CacheService railReplicatedService = registry.getResource(CacheService.class, "RailReplicatedService");
+//        BackingMapManager backingMapManager = railReplicatedService.getBackingMapManager();
+//        BackingMapContext tiplocBackingMapContext = backingMapManager.getContext().getBackingMapContext("rail-tiploc");
+//        ObservableMap tiplocBackingMap = tiplocBackingMapContext.getBackingMap();
 
         Map<String,Object> data = new HashMap<>();
         data.put("Status", trainStatus.getStatus());
